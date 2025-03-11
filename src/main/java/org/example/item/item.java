@@ -3,10 +3,19 @@ package org.example.item;
 public class item {
     private String name;
     private String description;
-
-    public item(String name, String description){
+    private double effect;
+    public item(String name, String description, double effect){
         this.description = description;
         this.name = name;
+        this.effect = effect;
+    }
+
+    public double getEffect() {
+        return effect;
+    }
+
+    public void setEffect(double effect) {
+        this.effect = effect;
     }
 
 

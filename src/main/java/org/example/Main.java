@@ -95,18 +95,28 @@ public class Main {
     }
 
     public void item(){
+        System.out.println(user.getHealth());
         System.out.println(user.getInventory());
-        System.out.println("Should I use something? : ");
-        String choice2 = scanner.nextLine();
-        for(int i=0; i < user.getInventory().size(); i++){
-            choice2 = choice2.substring(0,1).toUpperCase() + choice2.substring(1);
-            if(choice2.equals(user.getInventory().get(i).getName())){
-                System.out.println("You consumed the " + user.getInventory().get(i).getName() + "!");
-            }
-            else{
-                System.out.println("I don't have one...");
+        if(user.getInventory().isEmpty()){
+            System.out.println("There's nothing in my bag!");
+        }
+        else{
+            System.out.println("Should I use something? : ");
+            String choice2 = scanner.nextLine();
+            for(int i=0; i < user.getInventory().size(); i++){
+                choice2 = choice2.substring(0,1).toUpperCase() + choice2.substring(1);
+                if(choice2.equals(user.getInventory().get(i).getName())){
+                    System.out.println("You consumed the " + user.getInventory().get(i).getName() + "!");
+                    user.setHealth(user.getHealth() + user.getInventory().get(i).getEffect());
+                    user.removeInventory(user.getInventory().get(i));
+                    break;
+                }
+                else{
+                    System.out.println("I don't have one...");
+                }
             }
         }
+        System.out.println(user.getHealth());
     }
 
 
@@ -136,8 +146,18 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         Player user = new Player("Hero", 100.00, 10.0, .05, 0.15, 1.05, 0.00);
         enemy enemy = new enemy(100.0, "Slime", .15, 7.0, 1.06);
-        item apple = new item("Apple", "Heals you for 25 health.");
+        item apple = new item("Apple", "Heals you for 25 health.", 25.0);
+        item banana = new item("Banana", "Heals you for 15 health.", 25.0);
+        item brandon = new item("Brandon Juice", "Full Heal.", 9999.0);
+        item evilKyle = new item("Kylett", "Probably shouldn't eat this.", -25.0);
+        item deviousBrad = new item("Strange Bradium", "Mystery. Give it a try!", Math.random()*Math.random()*33);
+
         user.setInventory(apple);
+        user.setInventory(banana);
+        user.setInventory(evilKyle);
+        user.setInventory(brandon);
+        user.setInventory(deviousBrad);
+
         Main game = new Main();
 
         System.out.println("What's up dude this is your basic RPG fight testing lounge. You have your name, Health, attack, hit/dodge chance.");

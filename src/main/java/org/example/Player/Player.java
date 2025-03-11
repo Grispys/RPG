@@ -37,6 +37,10 @@ public class Player {
         this.inventory.add(item);
     }
 
+    public void removeInventory(item item){
+        this.inventory.remove(item);
+    }
+
 
 
     public double getGuard() {
