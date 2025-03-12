@@ -5,6 +5,8 @@ import org.example.enemy.enemy;
 
 import java.sql.SQLOutput;
 import org.example.item.item;
+
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -15,15 +17,22 @@ public class Main {
 
     enemy enemy;
     boolean finished = false;
+    boolean ranAway = false;
 
 
     public void fighting(enemy enemy, Player player) throws InterruptedException {
         this.enemy = enemy;
         this.user = player;
        finished = false;
+       ranAway = false;
         while(true){
             if(finished){
                 System.out.println("You win!");
+                break;
+            }
+
+            if(ranAway){
+                System.out.println("The fight's over...");
                 break;
             }
 
@@ -47,13 +56,14 @@ public class Main {
                     item();
                     break;
                 case 4:
-                    System.out.println("There's no opening! ");
+                    run();
+//                    System.out.println("There's no opening! ");
                     break;
                 default:
                     System.out.println("What to do...");
 
             }
-            if(!finished){
+            if(! (finished || ranAway)){
                 enemy_attack(enemy);
             }
 
@@ -72,7 +82,8 @@ public class Main {
         double damage =  (user.getAttack_dmg() * chance);
         damage = Math.floor(damage);
         double dodge = (Math.random()+ enemy.getDodge_chance());
-        System.out.println(dodge+ "%");
+//        THIS IS A DEBUG LINE!!!!!
+//        System.out.println(dodge+ "%");
 //        use if statement to see if hit chance, along with enemy dodge chance, allows the hit to go through
         double result = enemy.getHealth() - damage;
         if(dodge <=.95){
@@ -95,6 +106,7 @@ public class Main {
     }
 
     public void item(){
+        boolean found = false;
         System.out.println(user.getHealth());
         System.out.println(user.getInventory());
         if(user.getInventory().isEmpty()){
@@ -103,20 +115,33 @@ public class Main {
         else{
             System.out.println("Should I use something? : ");
             String choice2 = scanner.nextLine();
+
+            choice2 = choice2.substring(0,1).toUpperCase() + choice2.substring(1);
             for(int i=0; i < user.getInventory().size(); i++){
-                choice2 = choice2.substring(0,1).toUpperCase() + choice2.substring(1);
                 if(choice2.equals(user.getInventory().get(i).getName())){
                     System.out.println("You consumed the " + user.getInventory().get(i).getName() + "!");
                     user.setHealth(user.getHealth() + user.getInventory().get(i).getEffect());
                     user.removeInventory(user.getInventory().get(i));
+                    found = true;
                     break;
                 }
-                else{
-                    System.out.println("I don't have one...");
-                }
+            }
+            if(!found){
+                System.out.println("I don't have that!");
             }
         }
         System.out.println(user.getHealth());
+    }
+
+    public void run(){
+        double escape = (Math.random() + user.getDodge_chance());
+        if(escape>=.90){
+            System.out.println("You managed to get outta there!");
+            ranAway = true;
+        }else{
+            System.out.println("You couldn't find a good way out!");
+        }
+//        System.out.println(escape);
     }
 
 
@@ -161,8 +186,6 @@ public class Main {
         Main game = new Main();
 
         System.out.println("What's up dude this is your basic RPG fight testing lounge. You have your name, Health, attack, hit/dodge chance.");
-        System.out.println("inventory:");
-        System.out.println(user.getInventory());
 
         game.fighting(enemy, user);
 
